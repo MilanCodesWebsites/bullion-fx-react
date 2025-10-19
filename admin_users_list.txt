@@ -1,0 +1,6 @@
+-- List of admin users for Vertex project
+-- Add these users to the admin_users table in Supabase
+
+-- Admin User 1
+-- email: Ogolomaprince1@gmail.com
+-- password: Mynewaccount@2004
