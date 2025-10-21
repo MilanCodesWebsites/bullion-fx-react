@@ -178,7 +178,7 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-white">Welcome, {user.firstName || 'User'}!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Welcome back, {user.firstName || 'User'}!</h1>
         <p className="text-slate-400 text-sm mt-1">Manage your BullionFX portfolio</p>
       </div>
 
@@ -453,4 +453,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-
