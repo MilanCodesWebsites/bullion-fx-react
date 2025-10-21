@@ -17,10 +17,9 @@ const loginSchema = yup.object({
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<boolean>;
   onSwitchToRegister: () => void;
-  onSwitchToForgotPassword?: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToRegister, onSwitchToForgotPassword }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -109,17 +108,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToRegister, onSw
           >
             {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
-
-          {/* Forgot Password Link */}
-          {onSwitchToForgotPassword && (
-            <button
-              type="button"
-              onClick={onSwitchToForgotPassword}
-              className="w-full text-center text-xs sm:text-sm text-slate-400 hover:text-slate-300 transition-colors py-2"
-            >
-              Forgot your password?
-            </button>
-          )}
         </form>
 
         {/* Switch to Register */}
