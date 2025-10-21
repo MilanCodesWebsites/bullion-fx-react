@@ -20,7 +20,7 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, onConfirm, onBack
     }).format(value);
   };
 
-   const walletAddresses = {
+ const walletAddresses = {
   BTC: '1N4wen6Nk9yhmrueWSZXUePgCYbb7FtQhe',
   ETH: '0x5c44e4f4f9251f43d647f5c8a7b799bb480bd674',
   SOL: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',

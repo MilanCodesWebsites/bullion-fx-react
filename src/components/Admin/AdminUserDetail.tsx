@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Edit2 } from 'lucide-react';
 import AdminUserStatsEditor from './AdminUserStatsEditor';
 import AdminProfitDeduction from './AdminProfitDeduction';
 import TransactionManagementModal from './TransactionManagementModal';
+import UserTransactionStatusEditor from './UserTransactionStatusEditor';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
@@ -40,6 +41,7 @@ const AdminUserDetail: React.FC = () => {
   const [userTransactions, setUserTransactions] = useState<Transaction[]>([]);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [showStatusEditor, setShowStatusEditor] = useState(false);
 
   // Load user data from Supabase
   useEffect(() => {
@@ -212,14 +214,24 @@ const AdminUserDetail: React.FC = () => {
 
       {/* Transaction History Section */}
       <div className="bg-slate-900/80 backdrop-blur-sm border border-slate-800/60 rounded-2xl p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <h3 className="text-lg font-semibold text-white">Transaction History</h3>
-          <button
-            onClick={() => setShowTransactionModal(true)}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-          >
-            Manage Transactions
-          </button>
+          <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
+            <button
+              onClick={() => setShowStatusEditor(true)}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex-1 sm:flex-none"
+            >
+              <Edit2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Edit Status</span>
+              <span className="sm:hidden">Status</span>
+            </button>
+            <button
+              onClick={() => setShowTransactionModal(true)}
+              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors flex-1 sm:flex-none"
+            >
+              Manage Transactions
+            </button>
+          </div>
         </div>
         
         <div className="space-y-3">
@@ -271,6 +283,20 @@ const AdminUserDetail: React.FC = () => {
           userId={user.id}
           userName={`${user.firstName} ${user.lastName}`}
           onTransactionDeleted={() => {
+            if (user) {
+              loadTransactions(user.id);
+            }
+          }}
+        />
+      )}
+
+      {/* Transaction Status Editor Modal */}
+      {user && (
+        <UserTransactionStatusEditor
+          isOpen={showStatusEditor}
+          onClose={() => setShowStatusEditor(false)}
+          userId={user.id}
+          onStatusUpdated={() => {
             if (user) {
               loadTransactions(user.id);
             }
