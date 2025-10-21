@@ -411,7 +411,7 @@ const SettingsPage: React.FC = () => {
                 <p className="text-sm text-slate-400">Get instant help from our support team</p>
               </div>
               <a
-                href="https://widget-page.smartsupp.com/widget/d6ead1c3bef49783dec772cb7c2a3c5d56fde7be"
+                href="https://widget-page.smartsupp.com/widget/cbb58c4f3a09e07e5fbd575472b806356a91639c"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
