@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, Home, ArrowRight } from 'lucide-react';
+import { CheckCircle, Home, ArrowRight } from 'lucide-react';
 import Button from '../UI/Button';
 import { Link } from 'react-router-dom';
 
@@ -22,27 +22,12 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onReset }) => {
         </h1>
 
         {/* Message */}
-        <p className="text-slate-300 mb-6">
-          Your deposit request has been submitted and is pending admin review. 
-          Your balance will NOT be credited until an authorized admin approves and verifies your payment.
+        <p className="text-slate-300 mb-8">
+          Your deposit is being reviewed and your balance will be updated in 1-2 hours.
+          <br />
+          <br />
+          If it exceeds this time, please contact support.
         </p>
-
-        {/* Timeline */}
-        <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-6 mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Clock className="w-5 h-5 text-blue-400 mr-2" />
-            <span className="text-blue-400 font-medium">Review Process</span>
-          </div>
-          <ul className="text-slate-300 text-sm space-y-2">
-            <li>✓ Admin verifies your payment proof</li>
-            <li>✓ Payment is confirmed on the blockchain</li>
-            <li>✓ Balance is added to your account</li>
-            <li>✓ You receive a confirmation notification</li>
-          </ul>
-          <p className="text-sm text-slate-400 mt-4">
-            Typical processing time: 1 - 2 hours
-          </p>
-        </div>
 
         {/* Actions */}
         <div className="space-y-3">

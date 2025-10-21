@@ -63,15 +63,9 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ withdrawData, o
       <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 mb-6">
         <div className="flex items-start">
           <AlertTriangle className="w-5 h-5 text-blue-400 mr-3 mt-0.5" />
-          <div>
-            <h4 className="font-medium text-blue-400 mb-1">Pending Admin Review</h4>
-            <ul className="text-sm text-slate-300 space-y-1">
-              <li>• Your withdrawal request has been submitted for review</li>
-              <li>• An authorized admin must approve this request</li>
-              <li>• Your balance will NOT be deducted until approved</li>
-              <li>• Processing time: 24-48 hours after approval</li>
-              <li>• You'll receive notification once processed</li>
-            </ul>
+          <div className="text-sm text-slate-300">
+            <p className="font-medium text-blue-400 mb-2">Your withdrawal request has been received and is being processed in 1-2 hours.</p>
+            <p>If it exceeds this time, please contact support.</p>
           </div>
         </div>
       </div>
