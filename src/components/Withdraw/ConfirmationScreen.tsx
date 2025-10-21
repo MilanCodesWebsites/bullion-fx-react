@@ -17,7 +17,6 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ withdrawData, o
   };
 
   const feeAmount = withdrawData.amount * 0.1;
-  const netAmount = withdrawData.amount - feeAmount;
 
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 animate-slide-up">
@@ -50,27 +49,28 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ withdrawData, o
           </div>
           <div className="flex justify-between">
             <span className="text-slate-300">Processing fee (10%):</span>
-            <span className="text-red-400 font-medium">-{formatCurrency(feeAmount)}</span>
+            <span className="text-slate-400 font-medium">{formatCurrency(feeAmount)}</span>
           </div>
           <hr className="border-slate-600" />
           <div className="flex justify-between text-lg">
             <span className="text-white font-semibold">You will receive:</span>
-            <span className="text-neon-green font-bold">{formatCurrency(netAmount)}</span>
+            <span className="text-neon-green font-bold">{formatCurrency(withdrawData.amount)}</span>
           </div>
         </div>
       </div>
 
       {/* Important Notice */}
-      <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-4 mb-6">
+      <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 mb-6">
         <div className="flex items-start">
-          <AlertTriangle className="w-5 h-5 text-yellow-400 mr-3 mt-0.5" />
+          <AlertTriangle className="w-5 h-5 text-blue-400 mr-3 mt-0.5" />
           <div>
-            <h4 className="font-medium text-yellow-400 mb-1">Important Notice</h4>
+            <h4 className="font-medium text-blue-400 mb-1">Pending Admin Review</h4>
             <ul className="text-sm text-slate-300 space-y-1">
-              <li>• Processing time: 24-48 hours</li>
-              <li>• Ensure your wallet address is correct</li>
-              <li>• Fee payment must be confirmed before processing</li>
-              <li>• This action cannot be undone</li>
+              <li>• Your withdrawal request has been submitted for review</li>
+              <li>• An authorized admin must approve this request</li>
+              <li>• Your balance will NOT be deducted until approved</li>
+              <li>• Processing time: 24-48 hours after approval</li>
+              <li>• You'll receive notification once processed</li>
             </ul>
           </div>
         </div>

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { DollarSign, Wallet, Save, User, TrendingUp, TrendingDown, ArrowDown, ArrowUp } from 'lucide-react';
 import Modal from '../UI/Modal';
-import Input from '../UI/Input';
 import Button from '../UI/Button';
 
 const transactionSchema = yup.object({
@@ -16,7 +15,8 @@ const transactionSchema = yup.object({
     .required('Amount is required'),
   currency: yup.string().required('Currency is required'),
   walletAddress: yup.string().optional(),
-  userId: yup.string().required('User is required')
+  userId: yup.string().required('User is required'),
+  summary: yup.string().optional()
 });
 
 interface TransactionAddModalProps {
@@ -58,8 +58,6 @@ const transactionTypes = [
 ];
 
 const TransactionAddModal: React.FC<TransactionAddModalProps> = ({ users, selectedUserId, onSave, onClose }) => {
-  const [selectedType, setSelectedType] = useState('deposit');
-  
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
     resolver: yupResolver(transactionSchema),
     defaultValues: {
@@ -67,7 +65,8 @@ const TransactionAddModal: React.FC<TransactionAddModalProps> = ({ users, select
       amount: undefined,
       currency: 'USDT',
       walletAddress: '',
-      userId: selectedUserId || (users[0]?.id ?? '')
+      userId: selectedUserId || (users[0]?.id ?? ''),
+      summary: ''
     }
   });
 
@@ -78,7 +77,8 @@ const TransactionAddModal: React.FC<TransactionAddModalProps> = ({ users, select
       type: data.type,
       amount: Number(data.amount),
       currency: data.currency,
-      walletAddress: data.walletAddress || undefined
+      walletAddress: data.walletAddress || undefined,
+      summary: data.summary || undefined
     });
   };
 
@@ -99,7 +99,6 @@ const TransactionAddModal: React.FC<TransactionAddModalProps> = ({ users, select
                     relative cursor-pointer rounded-xl border-2 p-4 transition-all duration-200
                     ${isSelected ? type.color : 'bg-slate-800/50 border-slate-700/50 text-slate-400 hover:border-slate-600/50'}
                   `}
-                  onClick={() => setSelectedType(type.value)}
                 >
                   <input
                     type="radio"
@@ -193,6 +192,20 @@ const TransactionAddModal: React.FC<TransactionAddModalProps> = ({ users, select
             />
           </div>
           {errors.walletAddress && <p className="mt-1 text-sm text-red-400">{String(errors.walletAddress.message)}</p>}
+        </div>
+
+        {/* Transaction Summary (optional) */}
+        <div>
+          <label className="block text-sm font-medium text-slate-200 mb-2">
+            Transaction Summary <span className="text-slate-500 text-xs">(optional)</span>
+          </label>
+          <textarea
+            placeholder="Add notes or details about this transaction..."
+            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-3 text-slate-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+            rows={3}
+            {...register('summary')}
+          />
+          {errors.summary && <p className="mt-1 text-sm text-red-400">{String(errors.summary.message)}</p>}
         </div>
 
         {/* Action Buttons */}

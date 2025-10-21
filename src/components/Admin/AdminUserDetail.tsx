@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import AdminUserStatsEditor from './AdminUserStatsEditor';
 import AdminProfitDeduction from './AdminProfitDeduction';
+import TransactionManagementModal from './TransactionManagementModal';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
@@ -38,6 +39,7 @@ const AdminUserDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userTransactions, setUserTransactions] = useState<Transaction[]>([]);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
 
   // Load user data from Supabase
   useEffect(() => {
@@ -210,7 +212,15 @@ const AdminUserDetail: React.FC = () => {
 
       {/* Transaction History Section */}
       <div className="bg-slate-900/80 backdrop-blur-sm border border-slate-800/60 rounded-2xl p-6 shadow-lg">
-        <h3 className="text-lg font-semibold text-white mb-4">Transaction History</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-white">Transaction History</h3>
+          <button
+            onClick={() => setShowTransactionModal(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+          >
+            Manage Transactions
+          </button>
+        </div>
         
         <div className="space-y-3">
           {isLoadingTransactions ? (
@@ -252,6 +262,21 @@ const AdminUserDetail: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Transaction Management Modal */}
+      {user && (
+        <TransactionManagementModal
+          isOpen={showTransactionModal}
+          onClose={() => setShowTransactionModal(false)}
+          userId={user.id}
+          userName={`${user.firstName} ${user.lastName}`}
+          onTransactionDeleted={() => {
+            if (user) {
+              loadTransactions(user.id);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

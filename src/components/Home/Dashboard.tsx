@@ -178,7 +178,7 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-white">Welcome back, {user.firstName || 'User'}!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Welcome, {user.firstName || 'User'}!</h1>
         <p className="text-slate-400 text-sm mt-1">Manage your BullionFX portfolio</p>
       </div>
 
@@ -197,12 +197,12 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Balance Display */}
-        <div className={`text-5xl sm:text-6xl font-bold text-white mb-6 ${!showBalance ? 'blur-sm select-none' : ''}`}>
+        <div className={`text-3xl sm:text-6xl font-bold text-white mb-6 ${!showBalance ? 'blur-sm select-none' : ''}`}>
           ${assetsBalance.toFixed(2)}
         </div>
 
-        {/* Time Period Stats */}
-        <div className="flex gap-8">
+        {/* Time Period Stats - Hidden on mobile */}
+        <div className="hidden sm:flex gap-8">
           <div>
             <p className="text-slate-400 text-xs mb-1">Today</p>
             <p className="text-green-400 font-semibold text-lg">+2.5% ↗</p>
@@ -218,63 +218,86 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Three Stat Cards - Inverted Triangle Layout (2 top, 1 centered bottom on mobile) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {/* Profits Card - Blue */}
-        <div className="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#3a5a7f] via-[#3a5a7f] to-[#2a4a6f] p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="w-12 h-12 rounded-full bg-blue-500/30 flex items-center justify-center">
-              <FontAwesomeIcon icon={faChartLine} className="w-5 h-5 text-blue-300" />
+      {/* Three Stat Cards - Side by side on mobile, 3 on desktop */}
+      <div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+          {/* Profits Card - Blue */}
+          <div className="rounded-2xl border border-slate-700 bg-[#8896AC] p-3 sm:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center">
+                <FontAwesomeIcon icon={faChartLine} className="w-4 h-4 text-black" />
+              </div>
+              <button
+                onClick={() => setShowProfits(s => !s)}
+                className="p-1.5 text-black hover:text-black/70 transition"
+              >
+                {showProfits ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
-            <button
-              onClick={() => setShowProfits(s => !s)}
-              className="p-2 text-slate-400 hover:text-white transition"
-            >
-              {showProfits ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
+            <h3 className="text-xs sm:text-base font-medium text-black mb-1">Profits</h3>
+            <p className={`text-lg sm:text-4xl font-bold ${!showProfits ? 'blur-sm' : 'text-black'}`}>
+              ${profits.toFixed(2)}
+            </p>
           </div>
-          <h3 className="text-slate-300 font-medium text-sm mb-2">Profits</h3>
-          <p className={`text-3xl sm:text-4xl font-bold ${!showProfits ? 'blur-sm' : 'text-white'}`}>
-            ${profits.toFixed(2)}
-          </p>
+
+          {/* Deposits Card - Tan/Brown */}
+          <div className="rounded-2xl border border-slate-700 bg-[#A69076] p-3 sm:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center">
+                <FontAwesomeIcon icon={faCreditCard} className="w-4 h-4 text-black" />
+              </div>
+              <button
+                onClick={() => setShowDeposits(s => !s)}
+                className="p-1.5 text-black hover:text-black/70 transition"
+              >
+                {showDeposits ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            <h3 className="text-xs sm:text-base font-medium text-black mb-1">Deposits</h3>
+            <p className={`text-lg sm:text-4xl font-bold ${!showDeposits ? 'blur-sm' : 'text-black'}`}>
+              ${deposits.toFixed(2)}
+            </p>
+          </div>
+
+          {/* Expert Trades Card - Desktop view (full width on third column) */}
+          <div className="hidden sm:block rounded-2xl border border-slate-700 bg-[#5B9277] p-3 sm:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center">
+                <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-4 h-4 text-black" />
+              </div>
+              <button
+                onClick={() => setShowExpertTrades(s => !s)}
+                className="p-1.5 text-black hover:text-black/70 transition"
+              >
+                {showExpertTrades ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            <h3 className="text-xs sm:text-base font-medium text-black mb-1">Expert Trades</h3>
+            <p className={`text-lg sm:text-4xl font-bold ${!showExpertTrades ? 'blur-sm' : 'text-black'}`}>
+              ${expertTrades.toFixed(2)}
+            </p>
+          </div>
         </div>
 
-        {/* Deposits Card - Tan/Brown */}
-        <div className="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#8b7355] via-[#8b7355] to-[#7a6245] p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="w-12 h-12 rounded-full bg-amber-600/30 flex items-center justify-center">
-              <FontAwesomeIcon icon={faCreditCard} className="w-5 h-5 text-amber-300" />
+        {/* Expert Trades Card - Mobile view (70% width, centered) */}
+        <div className="sm:hidden flex justify-center">
+          <div className="w-[70%] rounded-2xl border border-slate-700 bg-[#5B9277] p-3">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center">
+                <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-4 h-4 text-black" />
+              </div>
+              <button
+                onClick={() => setShowExpertTrades(s => !s)}
+                className="p-1.5 text-black hover:text-black/70 transition"
+              >
+                {showExpertTrades ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
-            <button
-              onClick={() => setShowDeposits(s => !s)}
-              className="p-2 text-slate-400 hover:text-white transition"
-            >
-              {showDeposits ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
+            <h3 className="text-xs font-medium text-black mb-1">Expert Trades</h3>
+            <p className={`text-lg font-bold ${!showExpertTrades ? 'blur-sm' : 'text-black'}`}>
+              ${expertTrades.toFixed(2)}
+            </p>
           </div>
-          <h3 className="text-slate-200 font-medium text-sm mb-2">Deposits</h3>
-          <p className={`text-3xl sm:text-4xl font-bold ${!showDeposits ? 'blur-sm' : 'text-white'}`}>
-            ${deposits.toFixed(2)}
-          </p>
-        </div>
-
-        {/* Expert Trades Card - Green - Centered on mobile */}
-        <div className="col-span-2 sm:col-span-1 rounded-2xl border border-slate-700 bg-gradient-to-br from-[#5a9a6f] via-[#5a9a6f] to-[#4a8a5f] p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="w-12 h-12 rounded-full bg-green-600/30 flex items-center justify-center">
-              <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-5 h-5 text-green-300" />
-            </div>
-            <button
-              onClick={() => setShowExpertTrades(s => !s)}
-              className="p-2 text-slate-400 hover:text-white transition"
-            >
-              {showExpertTrades ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          </div>
-          <h3 className="text-slate-200 font-medium text-sm mb-2">Expert Trades</h3>
-          <p className={`text-3xl sm:text-4xl font-bold ${!showExpertTrades ? 'blur-sm' : 'text-white'}`}>
-            ${expertTrades.toFixed(2)}
-          </p>
         </div>
       </div>
 

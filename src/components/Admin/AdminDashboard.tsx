@@ -3,6 +3,8 @@ import { Users, DollarSign, TrendingUp, Activity, Search, Plus, ArrowRight } fro
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 import TransactionAddModal from './TransactionAddModal';
+import WithdrawalManagementModal from './WithdrawalManagementModal';
+import DepositManagementModal from './DepositManagementModal';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
@@ -20,6 +22,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const { getAllUsers, getAllTransactions } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState('');
   const [realUsers, setRealUsers] = useState(users);
   const [realTransactions, setRealTransactions] = useState(transactions);
@@ -84,7 +88,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         amount: transactionData.amount,
         type: transactionData.type === 'deposit' ? 'credit' : 'debit',
         description: `${transactionData.type} ${transactionData.amount} ${transactionData.currency}`,
-        status: 'success'
+        status: 'success',
+        summary: transactionData.summary || null
       };
       
       const { error } = await supabase
@@ -188,14 +193,32 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <div className="bg-slate-900/80 backdrop-blur-sm border border-slate-800/60 rounded-2xl p-4 sm:p-6 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h2 className="text-lg sm:text-xl font-semibold text-white">User Management</h2>
-          <Button 
-            onClick={() => setShowAddTransaction(true)} 
-            icon={Plus}
-            size="sm"
-            className="w-full sm:w-auto"
-          >
-            Add Transaction
-          </Button>
+          <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
+            <Button 
+              onClick={() => setShowDepositModal(true)} 
+              icon={DollarSign}
+              size="sm"
+              className="flex-1 sm:flex-none"
+            >
+              Manage Deposits
+            </Button>
+            <Button 
+              onClick={() => setShowWithdrawalModal(true)} 
+              icon={ArrowRight}
+              size="sm"
+              className="flex-1 sm:flex-none"
+            >
+              Manage Withdrawals
+            </Button>
+            <Button 
+              onClick={() => setShowAddTransaction(true)} 
+              icon={Plus}
+              size="sm"
+              className="flex-1 sm:flex-none"
+            >
+              Add Transaction
+            </Button>
+          </div>
         </div>
 
         {/* Search */}
@@ -292,6 +315,36 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           onClose={() => {
             setShowAddTransaction(false);
             setSelectedUserId('');
+          }}
+        />
+      )}
+
+      {showDepositModal && (
+        <DepositManagementModal
+          isOpen={showDepositModal}
+          onClose={() => setShowDepositModal(false)}
+          onDepositApproved={() => {
+            // Reload users data to reflect updated balances
+            const refreshData = async () => {
+              const usersData = await getAllUsers();
+              setRealUsers(usersData);
+            };
+            refreshData();
+          }}
+        />
+      )}
+
+      {showWithdrawalModal && (
+        <WithdrawalManagementModal
+          isOpen={showWithdrawalModal}
+          onClose={() => setShowWithdrawalModal(false)}
+          onWithdrawalApproved={() => {
+            // Reload users data to reflect updated balances
+            const refreshData = async () => {
+              const usersData = await getAllUsers();
+              setRealUsers(usersData);
+            };
+            refreshData();
           }}
         />
       )}

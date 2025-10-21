@@ -26,10 +26,10 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ balance, onWithdraw }) => {
 
   const handleConfirmWithdraw = () => {
     const transaction = {
-      type: 'debit' as const, // Map 'withdrawal' to 'debit'
+      type: 'debit' as const,
       amount: withdrawData.amount,
-      description: `Withdrawal ${withdrawData.amount} ${withdrawData.currency} to ${withdrawData.walletAddress}`, // Add description field
-      status: 'pending' as const
+      description: `Withdrawal ${withdrawData.amount} ${withdrawData.currency} to ${withdrawData.walletAddress}`,
+      status: 'pending' as const  // Always create as pending - admin must approve
     };
     
     onWithdraw(transaction);
@@ -101,12 +101,12 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ balance, onWithdraw }) => {
 
       {step === 4 && (
         <div className="text-center bg-slate-800 border border-slate-700 rounded-2xl p-8">
-          <div className="p-4 bg-neon-green/10 rounded-2xl inline-block mb-6 animate-glow">
-            <ArrowUpRight className="w-12 h-12 text-neon-green" />
+          <div className="p-4 bg-blue-500/10 rounded-2xl inline-block mb-6 animate-glow">
+            <ArrowUpRight className="w-12 h-12 text-blue-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Withdrawal Submitted!</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Withdrawal Request Submitted!</h2>
           <p className="text-slate-300 mb-6">
-            Your withdrawal request is being processed and will be completed within 24-48 hours.
+            Your withdrawal request has been submitted and is pending admin review. Your account balance remains unchanged until an authorized admin approves the request. You'll be notified once it's processed.
           </p>
           <button
             onClick={resetFlow}

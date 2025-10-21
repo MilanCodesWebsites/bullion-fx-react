@@ -14,7 +14,6 @@ const AuthWrapper: React.FC = () => {
         <LoginForm 
           onLogin={login}
           onSwitchToRegister={() => setAuthState('register')}
-          onSwitchToForgotPassword={() => setAuthState('forgot-password')}
         />
       )}
       {authState === 'register' && (
