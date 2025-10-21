@@ -52,7 +52,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onSubmit, onBankWi
       {/* Balance Display */}
       <div className="bg-slate-700/30 border border-slate-600/50 rounded-xl p-4 mb-6">
         <div className="flex items-center justify-between">
-          <span className="text-slate-400">Available Balance</span>
+          <span className="text-slate-400">Assets Balance</span>
           <span className="text-xl font-semibold text-green-400"></span>
           <span className="text-xl font-semibold text-neon-green">
             {formatBalance(balance)}
