@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout/Layout';
 import AdminLayout from './components/Admin/AdminLayout';
 import AuthWrapper from './components/Auth/AuthWrapper';
+import ForgotPasswordPage from './components/Auth/ForgotPasswordPage';
 import PasswordResetPage from './components/Auth/PasswordResetPage';
 import ProtectedRoute from './components/Routes/ProtectedRoute';
 import Dashboard from './components/Home/Dashboard';
@@ -84,6 +85,9 @@ const AppContent: React.FC = () => {
           {/* Password Reset Route */}
           <Route path="/reset-password" element={<PasswordResetPage />} />
 
+          {/* Forgot Password Route */}
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
           <Route path="/deposit" element={
             isAuthenticated ? (
               <ProtectedRoute>
@@ -103,7 +107,7 @@ const AppContent: React.FC = () => {
             isAuthenticated ? (
               <ProtectedRoute>
                 <Layout user={user!} onLogout={logout}>
-                  <WithdrawPage balance={user!.balance} onWithdraw={(transaction) => {
+                  <WithdrawPage balance={(user!.profits || 0) + (user!.deposits || 0) + (user!.expertTrades || 0)} onWithdraw={(transaction) => {
                     // This will save the transaction to Supabase and update AuthContext
                     addTransaction(transaction);
                   }} />
