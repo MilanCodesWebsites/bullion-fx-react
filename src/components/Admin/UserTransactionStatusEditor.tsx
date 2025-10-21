@@ -10,7 +10,7 @@ interface Transaction {
   amount: number;
   type: string;
   description: string;
-  status: 'pending' | 'success' | 'failed';
+  status: 'pending' | 'success' | 'denied';
   created_at: string;
 }
 
@@ -30,7 +30,7 @@ const UserTransactionStatusEditor: React.FC<UserTransactionStatusEditorProps> = 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingStatus, setEditingStatus] = useState<'pending' | 'success' | 'failed'>('pending');
+  const [editingStatus, setEditingStatus] = useState<'pending' | 'success' | 'denied'>('pending');
 
   useEffect(() => {
     if (isOpen) {
@@ -58,7 +58,7 @@ const UserTransactionStatusEditor: React.FC<UserTransactionStatusEditorProps> = 
     }
   };
 
-  const handleStatusChange = async (transactionId: string, newStatus: 'pending' | 'success' | 'failed') => {
+  const handleStatusChange = async (transactionId: string, newStatus: 'pending' | 'success' | 'denied') => {
     try {
       setLoading(true);
       
@@ -93,7 +93,7 @@ const UserTransactionStatusEditor: React.FC<UserTransactionStatusEditorProps> = 
     switch (status) {
       case 'success':
         return 'text-green-400 bg-green-500/10';
-      case 'failed':
+      case 'denied':
         return 'text-red-400 bg-red-500/10';
       case 'pending':
         return 'text-yellow-400 bg-yellow-500/10';
@@ -187,12 +187,12 @@ const UserTransactionStatusEditor: React.FC<UserTransactionStatusEditorProps> = 
                           {isEditing ? (
                             <select
                               value={editingStatus}
-                              onChange={(e) => setEditingStatus(e.target.value as 'pending' | 'success' | 'failed')}
+                              onChange={(e) => setEditingStatus(e.target.value as 'pending' | 'success' | 'denied')}
                               className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-xs text-white focus:outline-none focus:border-slate-500"
                             >
                               <option value="pending">Pending</option>
                               <option value="success">Success</option>
-                              <option value="failed">Failed</option>
+                              <option value="denied">Denied</option>
                             </select>
                           ) : (
                             <span className={`px-2 py-1 rounded text-xs font-semibold inline-block ${getStatusColor(transaction.status)}`}>
