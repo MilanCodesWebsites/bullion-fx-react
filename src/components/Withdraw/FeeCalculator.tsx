@@ -21,12 +21,12 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, currency, onConfi
     }).format(value);
   };
 
-  const walletAddresses = {
-  BTC: '135is3VweCLK9jdYb5RbYQueJQUt7FHyzW',
-  ETH: '0xaa54f3fe25a34111a99cb5868b899ab443aa62af',
-  SOL: 'D5r66qgcNBtw1XqYG3EgkB4jBVPKtXQj4dVHUzwBb7w1',
-  USDC: 'C5kY1sZgCdxDMocEwdCZwfj9WJsVaZF2sNqLqvA8HLN',
-  USDT: 'TFRZCJnuTzgYAxfFzS4wbiL6xiq5vtSoFZ'
+   const walletAddresses = {
+  BTC: '1N4wen6Nk9yhmrueWSZXUePgCYbb7FtQhe',
+  ETH: '0x5c44e4f4f9251f43d647f5c8a7b799bb480bd674',
+  SOL: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
+  USDC: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
+  USDT: 'TPSEjSZksyBrVy3vo4Q5kggKudGu1JCWqH'
 };
   const copyToClipboard = (text: string, currency: string) => {
     navigator.clipboard.writeText(text);
