@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Users, DollarSign, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Input from '../UI/Input';
+import Brand from '../UI/Brand';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AdminUsersList: React.FC = () => {
@@ -46,7 +47,7 @@ const AdminUsersList: React.FC = () => {
       {/* Header */}
       <div className="text-center sm:text-left">
         <div className="flex items-center justify-center sm:justify-start gap-3 mb-3">
-          <span className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-vertex-blue-600 to-vertex-cyan">Vertex</span>
+          <Brand />
           <h1 className="text-2xl sm:text-3xl font-semibold text-white">All Users</h1>
         </div>
         <p className="text-slate-400 text-sm sm:text-base">View and manage all registered users</p>
@@ -102,8 +103,8 @@ const AdminUsersList: React.FC = () => {
                   <span className="truncate">{u.email}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-16 text-slate-500">Balance:</span>
-                  <span className="font-medium text-green-400">{formatCurrency(u.balance)}</span>
+                  <span className="w-16 text-slate-500">Assets:</span>
+                  <span className="font-medium text-green-400">{formatCurrency((u.profits || 0) + (u.deposits || 0) + (u.expertTrades || 0))}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-400">
                   <span className="w-16 text-slate-500">Transactions:</span>
@@ -133,7 +134,7 @@ const AdminUsersList: React.FC = () => {
               <tr className="border-b border-slate-700/50 bg-slate-800/30">
                 <th className="text-left py-3 px-4 text-slate-300 font-medium text-sm">User</th>
                 <th className="text-left py-3 px-4 text-slate-300 font-medium text-sm">Email</th>
-                <th className="text-left py-3 px-4 text-slate-300 font-medium text-sm">Balance</th>
+                <th className="text-left py-3 px-4 text-slate-300 font-medium text-sm">Assets Balance</th>
                 <th className="text-left py-3 px-4 text-slate-300 font-medium text-sm">Transactions</th>
                 <th className="text-left py-3 px-4 text-slate-300 font-medium text-sm">Actions</th>
               </tr>
@@ -164,7 +165,7 @@ const AdminUsersList: React.FC = () => {
                   <td className="py-3 sm:py-4 px-4">
                     <div className="flex items-center gap-2">
                       <DollarSign className="w-4 h-4 text-slate-400" />
-                      <span className="font-medium text-green-400">{formatCurrency(u.balance)}</span>
+                      <span className="font-medium text-green-400">{formatCurrency((u.profits || 0) + (u.deposits || 0) + (u.expertTrades || 0))}</span>
                     </div>
                   </td>
                   <td className="py-3 sm:py-4 px-4 text-slate-400 text-sm">{u.transactions.length}</td>

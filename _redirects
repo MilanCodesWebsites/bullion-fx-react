@@ -1,0 +1,2 @@
+/dashboard /dashboard/dist/index.html 200!
+/dashboard/* /dashboard/dist/index.html 200!

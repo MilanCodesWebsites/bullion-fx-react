@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout/Layout';
 import AdminLayout from './components/Admin/AdminLayout';
 import AuthWrapper from './components/Auth/AuthWrapper';
+import PasswordResetPage from './components/Auth/PasswordResetPage';
 import ProtectedRoute from './components/Routes/ProtectedRoute';
 import Dashboard from './components/Home/Dashboard';
 import DepositPage from './components/Deposit/DepositPage';
@@ -80,6 +81,9 @@ const AppContent: React.FC = () => {
             )
           } />
 
+          {/* Password Reset Route */}
+          <Route path="/reset-password" element={<PasswordResetPage />} />
+
           <Route path="/deposit" element={
             isAuthenticated ? (
               <ProtectedRoute>
@@ -146,7 +150,7 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/dashboard">
         <AppContent />
         <Toaster position="top-right" toastOptions={{
           style: {

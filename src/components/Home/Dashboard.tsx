@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { TrendingUp, TrendingDown, Clock, CheckCircle, XCircle, AlertCircle, Quote, Eye, EyeOff, Shield } from 'lucide-react';
+import { TrendingUp, Clock, CheckCircle, XCircle, AlertCircle, Quote, Eye, EyeOff, Shield } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBillTransfer, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBillTransfer, faHandHoldingDollar, faChartLine, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import TransactionReceiptModal from './TransactionReceiptModal';
 
 interface Transaction {
@@ -20,24 +20,16 @@ const Dashboard: React.FC = () => {
   
   // Use centralized data from AuthContext
   const transactions = user?.transactions || [];
-  const totalBalance = user?.balance || 0;
-  const initialBalance = user?.initialBalance || 0;
 
   // Receipt modal state
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
 
-  // Calculate P&L percentage
-  const calculatePnL = () => {
-    if (initialBalance === 0) return 0;
-    return ((totalBalance - initialBalance) / initialBalance) * 100;
-  };
-
-  const pnlPercentage = calculatePnL();
-  const pnlAmount = totalBalance - initialBalance;
-
-  // Balance visibility toggle
+  // Balance visibility toggles - individual for each card
   const [showBalance, setShowBalance] = useState(true);
+  const [showProfits, setShowProfits] = useState(true);
+  const [showDeposits, setShowDeposits] = useState(true);
+  const [showExpertTrades, setShowExpertTrades] = useState(true);
 
   // Handle transaction click to open receipt
   const handleTransactionClick = (transaction: Transaction) => {
@@ -165,6 +157,13 @@ const Dashboard: React.FC = () => {
     return type === 'credit' ? 'text-green-400' : 'text-red-400';
   };
 
+  // Extract stats from user data or context
+  // These will be populated by admin edits
+  const profits = user?.profits || 0;
+  const deposits = user?.deposits || 0;
+  const expertTrades = user?.expertTrades || 0;
+  const assetsBalance = profits + deposits + expertTrades;
+
   if (!user) {
     return (
       <div className="space-y-6">
@@ -183,91 +182,120 @@ const Dashboard: React.FC = () => {
         <p className="text-slate-400 text-sm mt-1">Manage your BullionFX portfolio</p>
       </div>
 
-      {/* Main Balance Card - Modern Redesign with Integrated Actions */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-[#0b1220] via-[#0b1322] to-[#0b1220] p-4 sm:p-6 lg:p-8 shadow-[0_0_40px_-10px_rgba(59,130,246,0.35)]">
-        {/* Decorative background */}
-        <div className="pointer-events-none absolute inset-0 opacity-40">
-          <div className="absolute -top-24 -right-16 h-56 w-56 rounded-full blur-3xl bg-vertex-blue-600/30" />
-          <div className="absolute -bottom-24 -left-16 h-56 w-56 rounded-full blur-3xl bg-cyan-500/20" />
-        </div>
-
-        {/* Header with toggle */}
-        <div className="relative flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-vertex-blue-600/15 border border-vertex-blue-600/30 flex items-center justify-center">
-              <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-5 h-5 text-vertex-blue-600" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-white">Wallet Balance</h2>
-              <p className="text-xs text-slate-400">Live portfolio value</p>
-            </div>
-          </div>
+      {/* Main Assets Balance Card */}
+      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-[#1a2a4a] via-[#1a2642] to-[#0f1a34] p-6 sm:p-8 shadow-lg">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-slate-300 font-medium text-sm">Assets Balance</h2>
           <button
             onClick={() => setShowBalance(s => !s)}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/60 transition"
+            className="p-2 text-slate-400 hover:text-white transition"
             aria-label={showBalance ? 'Hide balance' : 'Show balance'}
           >
-            {showBalance ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            {showBalance ? 'Hide' : 'Show'}
+            {showBalance ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         </div>
 
-        {/* Balance display */}
-        <div className="relative mb-6">
-          <div className="flex items-baseline gap-3">
-            <div className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white ${!showBalance ? 'blur-sm select-none' : ''}`}>
-              ${totalBalance.toFixed(2)}
-            </div>
-            <span className="text-sm px-2 py-1 rounded-md bg-slate-800/70 border border-slate-700 text-slate-300">USD</span>
-          </div>
-          <div className="mt-2 text-slate-400 text-xs">Updated just now</div>
+        {/* Balance Display */}
+        <div className={`text-5xl sm:text-6xl font-bold text-white mb-6 ${!showBalance ? 'blur-sm select-none' : ''}`}>
+          ${assetsBalance.toFixed(2)}
         </div>
 
-        {/* Quick Stats Grid */}
-        <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-            <p className="text-xs text-slate-400 mb-1">Initial Balance</p>
-            <p className="text-lg font-semibold text-white">${initialBalance.toFixed(2)}</p>
+        {/* Time Period Stats */}
+        <div className="flex gap-8">
+          <div>
+            <p className="text-slate-400 text-xs mb-1">Today</p>
+            <p className="text-green-400 font-semibold text-lg">+2.5% ↗</p>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-            <p className="text-xs text-slate-400 mb-1">Profit & Loss</p>
-            <div className="flex items-center gap-2">
-              {pnlAmount >= 0 ? (
-                <TrendingUp className="w-5 h-5 text-vertex-blue-600" />
-              ) : (
-                <TrendingDown className="w-5 h-5 text-red-400" />
-              )}
-              <p className={`text-lg font-semibold ${pnlAmount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                ${Math.abs(pnlAmount).toFixed(2)}
-              </p>
-            </div>
+          <div>
+            <p className="text-slate-400 text-xs mb-1">7 Days</p>
+            <p className="text-green-400 font-semibold text-lg">+4.25% ↗</p>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-            <p className="text-xs text-slate-400 mb-1">P&L %</p>
-            <p className={`text-lg font-semibold ${pnlPercentage >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {pnlPercentage.toFixed(2)}%
-            </p>
+          <div>
+            <p className="text-slate-400 text-xs mb-1">30 Days</p>
+            <p className="text-green-400 font-semibold text-lg">+11.5% ↗</p>
           </div>
         </div>
+      </div>
 
-        {/* Integrated Action Buttons */}
-        <div className="relative border-t border-slate-700/50 pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Link
-              to="/deposit"
-              className="flex items-center justify-center gap-2 px-4 py-3 bg-vertex-blue-600 hover:bg-vertex-blue-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-vertex-blue-600/50"
+      {/* Three Stat Cards - Inverted Triangle Layout (2 top, 1 centered bottom on mobile) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {/* Profits Card - Blue */}
+        <div className="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#3a5a7f] via-[#3a5a7f] to-[#2a4a6f] p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 rounded-full bg-blue-500/30 flex items-center justify-center">
+              <FontAwesomeIcon icon={faChartLine} className="w-5 h-5 text-blue-300" />
+            </div>
+            <button
+              onClick={() => setShowProfits(s => !s)}
+              className="p-2 text-slate-400 hover:text-white transition"
             >
-              <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-4 h-4" />
-              Deposit Funds
-            </Link>
-            <Link
-              to="/withdraw"
-              className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg border border-slate-700 transition-all duration-200 hover:border-slate-600"
-            >
-              <FontAwesomeIcon icon={faHandHoldingDollar} className="w-4 h-4" />
-              Withdraw Funds
-            </Link>
+              {showProfits ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
           </div>
+          <h3 className="text-slate-300 font-medium text-sm mb-2">Profits</h3>
+          <p className={`text-3xl sm:text-4xl font-bold ${!showProfits ? 'blur-sm' : 'text-white'}`}>
+            ${profits.toFixed(2)}
+          </p>
+        </div>
+
+        {/* Deposits Card - Tan/Brown */}
+        <div className="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#8b7355] via-[#8b7355] to-[#7a6245] p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 rounded-full bg-amber-600/30 flex items-center justify-center">
+              <FontAwesomeIcon icon={faCreditCard} className="w-5 h-5 text-amber-300" />
+            </div>
+            <button
+              onClick={() => setShowDeposits(s => !s)}
+              className="p-2 text-slate-400 hover:text-white transition"
+            >
+              {showDeposits ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+          <h3 className="text-slate-200 font-medium text-sm mb-2">Deposits</h3>
+          <p className={`text-3xl sm:text-4xl font-bold ${!showDeposits ? 'blur-sm' : 'text-white'}`}>
+            ${deposits.toFixed(2)}
+          </p>
+        </div>
+
+        {/* Expert Trades Card - Green - Centered on mobile */}
+        <div className="col-span-2 sm:col-span-1 rounded-2xl border border-slate-700 bg-gradient-to-br from-[#5a9a6f] via-[#5a9a6f] to-[#4a8a5f] p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 rounded-full bg-green-600/30 flex items-center justify-center">
+              <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-5 h-5 text-green-300" />
+            </div>
+            <button
+              onClick={() => setShowExpertTrades(s => !s)}
+              className="p-2 text-slate-400 hover:text-white transition"
+            >
+              {showExpertTrades ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+          <h3 className="text-slate-200 font-medium text-sm mb-2">Expert Trades</h3>
+          <p className={`text-3xl sm:text-4xl font-bold ${!showExpertTrades ? 'blur-sm' : 'text-white'}`}>
+            ${expertTrades.toFixed(2)}
+          </p>
+        </div>
+      </div>
+
+      {/* Quick Actions Section */}
+      <div>
+        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            to="/deposit"
+            className="flex items-center justify-center gap-2 px-6 py-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl border border-slate-700 transition-all duration-200"
+          >
+            <FontAwesomeIcon icon={faMoneyBillTransfer} className="w-5 h-5" />
+            Deposit
+          </Link>
+          <Link
+            to="/withdraw"
+            className="flex items-center justify-center gap-2 px-6 py-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl border border-slate-700 transition-all duration-200"
+          >
+            <FontAwesomeIcon icon={faHandHoldingDollar} className="w-5 h-5" />
+            Withdraw
+          </Link>
         </div>
       </div>
 
@@ -283,21 +311,21 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center p-3 bg-slate-800 rounded-lg">
-                <span className="text-xs text-slate-400">Total Credits</span>
+                <span className="text-xs text-slate-400">Total Profits</span>
                 <span className="text-sm font-medium text-green-400">
-                  ${transactions.filter(t => t.type === 'credit' && t.status === 'success').reduce((sum, t) => sum + t.amount, 0).toFixed(2)}
+                  ${profits.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-800 rounded-lg">
-                <span className="text-xs text-slate-400">Total Debits</span>
+                <span className="text-xs text-slate-400">Total Losses</span>
                 <span className="text-sm font-medium text-red-400">
-                  ${transactions.filter(t => t.type === 'debit' && t.status === 'success').reduce((sum, t) => sum + t.amount, 0).toFixed(2)}
+                  ${transactions.filter(t => t.type === 'debit' && t.status === 'success' && t.description.includes('Trading Loss')).reduce((sum, t) => sum + t.amount, 0).toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-800 rounded-lg">
-                <span className="text-xs text-slate-400">Pending</span>
-                <span className="text-sm font-medium text-yellow-400">
-                  {transactions.filter(t => t.status === 'pending').length}
+                <span className="text-xs text-slate-400">P&L</span>
+                <span className={`text-sm font-medium ${profits - transactions.filter(t => t.type === 'debit' && t.status === 'success' && t.description.includes('Trading Loss')).reduce((sum, t) => sum + t.amount, 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  ${(profits - transactions.filter(t => t.type === 'debit' && t.status === 'success' && t.description.includes('Trading Loss')).reduce((sum, t) => sum + t.amount, 0)).toFixed(2)}
                 </span>
               </div>
             </div>

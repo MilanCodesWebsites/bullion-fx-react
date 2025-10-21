@@ -90,9 +90,10 @@ const TransactionsPage: React.FC<TransactionsPageProps> = ({ transactions, userB
   const paginatedTransactions = filteredTransactions.slice(startIndex, startIndex + itemsPerPage);
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
 
-  // Summary stats
-  const totalCredits = normalizedTransactions.filter(t => t.displayType === 'deposit' && t.displayStatus === 'completed').reduce((sum, t) => sum + t.amount, 0);
-  const totalDebits = normalizedTransactions.filter(t => t.displayType === 'withdrawal' && t.displayStatus === 'completed').reduce((sum, t) => sum + t.amount, 0);
+  // Summary stats - Calculate profits, losses, and P&L
+  const totalProfits = normalizedTransactions.filter(t => t.type === 'credit' && t.status === 'success' && !t.description?.includes('Trading Loss')).reduce((sum, t) => sum + t.amount, 0);
+  const totalLosses = normalizedTransactions.filter(t => t.type === 'debit' && t.status === 'success' && t.description?.includes('Trading Loss')).reduce((sum, t) => sum + t.amount, 0);
+  const totalPL = totalProfits - totalLosses;
 
   // Handle transaction click to open receipt
   const handleTransactionClick = (transaction: DisplayTransaction) => {
@@ -165,13 +166,17 @@ const TransactionsPage: React.FC<TransactionsPageProps> = ({ transactions, userB
             <span className="text-xs text-slate-400">Total</span>
             <span className="text-lg font-bold text-white">{transactions.length}</span>
           </div>
-          <div className="rounded-xl bg-vertex-blue-600/10 border border-vertex-blue-600/30 px-4 py-2 flex flex-col items-center min-w-[90px]">
-            <span className="text-xs text-vertex-blue">Credits</span>
-            <span className="text-lg font-bold text-vertex-blue">+{formatAmount(totalCredits)}</span>
+          <div className="rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-2 flex flex-col items-center min-w-[90px]">
+            <span className="text-xs text-green-400">Profits</span>
+            <span className="text-lg font-bold text-green-400">+{formatAmount(totalProfits)}</span>
           </div>
           <div className="rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-2 flex flex-col items-center min-w-[90px]">
-            <span className="text-xs text-red-400">Debits</span>
-            <span className="text-lg font-bold text-red-400">-{formatAmount(totalDebits)}</span>
+            <span className="text-xs text-red-400">Losses</span>
+            <span className="text-lg font-bold text-red-400">-{formatAmount(totalLosses)}</span>
+          </div>
+          <div className={`rounded-xl border px-4 py-2 flex flex-col items-center min-w-[90px] ${totalPL >= 0 ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
+            <span className={`text-xs ${totalPL >= 0 ? 'text-green-400' : 'text-red-400'}`}>P&L</span>
+            <span className={`text-lg font-bold ${totalPL >= 0 ? 'text-green-400' : 'text-red-400'}`}>{totalPL >= 0 ? '+' : '-'}{formatAmount(Math.abs(totalPL))}</span>
           </div>
         </div>
       </div>

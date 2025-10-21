@@ -10,6 +10,9 @@ interface User {
   initialBalance: number;
   avatar: string | null;
   transactions: Transaction[];
+  profits: number;
+  deposits: number;
+  expertTrades: number;
 }
 
 interface Transaction {
@@ -89,7 +92,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               balance: userData.balance,
               initialBalance: userData.initial_balance,
               avatar: userData.avatar_url,
-              transactions: userTransactions || []
+              transactions: userTransactions || [],
+              profits: userData.profits || 0,
+              deposits: userData.deposits || 0,
+              expertTrades: userData.expert_trades || 0
             };
 
             setUser(finalUser);
@@ -147,7 +153,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           balance: userProfile.balance,
           initialBalance: userProfile.initial_balance,
           avatar: userProfile.avatar_url,
-          transactions: [] // We'll load transactions separately
+          transactions: [], // We'll load transactions separately
+          profits: userProfile.profits || 0,
+          deposits: userProfile.deposits || 0,
+          expertTrades: userProfile.expert_trades || 0
         };
 
         // Load user transactions from Supabase
@@ -337,7 +346,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         balance: supabaseUser.balance,
         initialBalance: supabaseUser.initial_balance,
         avatar: supabaseUser.avatar_url,
-        transactions: [] // We'll load transactions separately
+        transactions: [], // We'll load transactions separately
+        profits: supabaseUser.profits || 0,
+        deposits: supabaseUser.deposits || 0,
+        expertTrades: supabaseUser.expert_trades || 0
       }));
 
       console.log(`✅ Loaded ${localUsers.length} users from Supabase`);

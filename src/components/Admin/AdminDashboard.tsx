@@ -52,7 +52,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     fetchData();
   }, [getAllUsers, getAllTransactions, users, transactions]);
 
-  const totalBalance = realUsers.reduce((sum, user) => sum + user.balance, 0);
+  const totalBalance = realUsers.reduce((sum, user) => sum + ((user.profits || 0) + (user.deposits || 0) + (user.expertTrades || 0)), 0);
   const totalTransactions = realTransactions.length;
   const pendingTransactions = realTransactions.filter(t => t.status === 'pending').length;
 
@@ -216,7 +216,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tr className="border-b border-slate-700/50 bg-slate-800/30">
                 <th className="text-left py-3 px-3 sm:px-4 text-slate-300 font-medium text-sm">User</th>
                 <th className="text-left py-3 px-3 sm:px-4 text-slate-300 font-medium text-sm">Email</th>
-                <th className="text-left py-3 px-3 sm:px-4 text-slate-300 font-medium text-sm">Balance</th>
+                <th className="text-left py-3 px-3 sm:px-4 text-slate-300 font-medium text-sm">Assets Balance</th>
                 <th className="text-left py-3 px-3 sm:px-4 text-slate-300 font-medium text-sm">Actions</th>
               </tr>
             </thead>
@@ -241,7 +241,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </td>
                   <td className="py-3 sm:py-4 px-3 sm:px-4">
                     <span className="text-green-400 font-semibold text-sm sm:text-base">
-                      {formatCurrency(user.balance)}
+                      {formatCurrency((user.profits || 0) + (user.deposits || 0) + (user.expertTrades || 0))}
                     </span>
                   </td>
                   <td className="py-3 sm:py-4 px-3 sm:px-4">

@@ -6,16 +6,14 @@ type BrandProps = {
 };
 
 const Brand: React.FC<BrandProps> = ({ className = '', subtle = false }) => {
-  const base = subtle
-    ? 'text-lg font-extrabold tracking-tight'
-    : 'text-2xl sm:text-3xl font-extrabold tracking-tight';
+  const size = subtle ? 'h-6 sm:h-7' : 'h-8 sm:h-10';
 
   return (
-    <span
-      className={`bg-clip-text text-transparent bg-gradient-to-r from-vertex-blue-600 to-vertex-cyan drop-shadow-sm ${base} ${className}`}
-    >
-      Vertex
-    </span>
+    <img
+      src="https://otiktpyazqotihijbwhm.supabase.co/storage/v1/object/public/images/405b6af4-fc2b-4340-a894-ac812f27e041-bull-svgrepo-com%20(1).png"
+      alt="BullionFX"
+      className={`${size} ${className}`}
+    />
   );
 };
 
