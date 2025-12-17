@@ -25,7 +25,7 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ amount, onConfirm, onBack
   ETH: '0x5c44e4f4f9251f43d647f5c8a7b799bb480bd674',
   SOL: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
   USDC: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
-  USDT: 'TPSEjSZksyBrVy3vo4Q5kggKudGu1JCWqH'
+  USDT: 'TNFtztWtZSyPuMcKRMopZ5E4FMu6hZUNzq'
 };
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
