@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import WithdrawForm from './WithdrawForm';
 import BankWithdrawPage from './BankWithdrawPage';
+import CashWithdrawPage from './CashWithdrawPage';
 import FeeCalculator from './FeeCalculator';
 import ConfirmationScreen from './ConfirmationScreen';
 import { ArrowUpRight, Home } from 'lucide-react';
@@ -14,7 +15,7 @@ interface WithdrawPageProps {
 const WithdrawPage: React.FC<WithdrawPageProps> = ({ balance, onWithdraw }) => {
   const [step, setStep] = useState(1);
   const [withdrawData, setWithdrawData] = useState<any>(null);
-  const [withdrawalType, setWithdrawalType] = useState<'crypto' | 'bank'>('crypto');
+  const [withdrawalType, setWithdrawalType] = useState<'crypto' | 'bank' | 'cash'>('crypto');
   const navigate = useNavigate();
 
   const handleWithdrawSubmit = (data: any) => {
@@ -33,7 +34,7 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ balance, onWithdraw }) => {
       description: `Withdrawal ${withdrawData.amount} ${withdrawData.currency} to ${withdrawData.walletAddress}`,
       status: 'pending' as const  // Always create as pending - admin must approve
     };
-    
+
     onWithdraw(transaction);
     setStep(4);
   };
@@ -65,6 +66,17 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ balance, onWithdraw }) => {
     );
   }
 
+  // Cash withdrawal flow
+  if (withdrawalType === 'cash') {
+    return (
+      <CashWithdrawPage
+        balance={balance}
+        onWithdraw={handleBankWithdraw}
+        onBack={handleBackToCrypto}
+      />
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header */}
@@ -73,19 +85,20 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ balance, onWithdraw }) => {
           <ArrowUpRight className="w-8 h-8 text-red-400" />
         </div>
         <h1 className="text-3xl font-bold text-white mb-2">Withdraw Funds</h1>
-  <p className="text-slate-400">Transfer funds from your BullionFX account</p>
+        <p className="text-slate-400">Transfer funds from your BullionFX account</p>
       </div>
 
       {step === 1 && (
-        <WithdrawForm 
-          balance={balance} 
+        <WithdrawForm
+          balance={balance}
           onSubmit={handleWithdrawSubmit}
           onBankWithdraw={() => setWithdrawalType('bank')}
+          onCashWithdraw={() => setWithdrawalType('cash')}
         />
       )}
 
       {step === 2 && withdrawData && (
-        <FeeCalculator 
+        <FeeCalculator
           amount={withdrawData.amount}
           currency={withdrawData.currency}
           onConfirm={handleFeeConfirm}

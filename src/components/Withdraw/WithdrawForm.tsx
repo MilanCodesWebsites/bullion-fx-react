@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { DollarSign, Wallet, ArrowRight, Building2 } from 'lucide-react';
+import { DollarSign, Wallet, ArrowRight, Building2, Banknote } from 'lucide-react';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 
@@ -10,7 +10,7 @@ const withdrawSchema = yup.object({
   amount: yup.number()
     .min(10, 'Minimum withdrawal is $10')
     .required('Amount is required')
-    .test('max-balance', 'Insufficient balance', function(value) {
+    .test('max-balance', 'Insufficient balance', function (value) {
       const { balance } = this.options.context || {};
       return value ? value <= balance : false;
     }),
@@ -30,9 +30,10 @@ interface WithdrawFormProps {
   balance: number;
   onSubmit: (data: any) => void;
   onBankWithdraw?: () => void;
+  onCashWithdraw?: () => void;
 }
 
-const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onSubmit, onBankWithdraw }) => {
+const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onSubmit, onBankWithdraw, onCashWithdraw }) => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
     resolver: yupResolver(withdrawSchema),
     context: { balance }
@@ -121,7 +122,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onSubmit, onBankWi
               <div>
                 <h4 className="font-medium text-yellow-400 mb-1">Fee Information</h4>
                 <p className="text-sm text-slate-300">
-                  A 10% withdrawal fee will be applied. You'll need to pay this fee 
+                  A 10% withdrawal fee will be applied. You'll need to pay this fee
                   before your withdrawal is processed.
                 </p>
               </div>
@@ -137,15 +138,26 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onSubmit, onBankWi
       {/* Bank Withdrawal Alternative */}
       <div className="mt-6 pt-6 border-t border-slate-700">
         <div className="text-center">
-          <p className="text-slate-400 text-sm mb-3">Prefer traditional banking?</p>
-          <button
-            type="button"
-            onClick={onBankWithdraw}
-            className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium"
-          >
-            <Building2 className="w-4 h-4" />
-            Bank Withdrawal
-          </button>
+          <p className="text-slate-400 text-sm mb-3">Prefer other withdrawal methods?</p>
+          <div className="flex items-center justify-center gap-6">
+            <button
+              type="button"
+              onClick={onBankWithdraw}
+              className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium"
+            >
+              <Building2 className="w-4 h-4" />
+              Bank Withdrawal
+            </button>
+            <span className="text-slate-600">|</span>
+            <button
+              type="button"
+              onClick={onCashWithdraw}
+              className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium"
+            >
+              <Banknote className="w-4 h-4" />
+              Cash Withdrawal
+            </button>
+          </div>
         </div>
       </div>
     </div>
