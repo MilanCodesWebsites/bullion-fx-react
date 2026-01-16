@@ -9,8 +9,7 @@ import Input from '../UI/Input';
 
 const cashWithdrawSchema = yup.object({
     amount: yup.number()
-        .min(100, 'Minimum cash withdrawal is $100')
-        .max(50000, 'Maximum cash withdrawal is $50,000')
+        .min(1, 'Amount must be greater than 0')
         .required('Amount is required'),
     name: yup.string()
         .min(2, 'Name must be at least 2 characters')
@@ -178,7 +177,7 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                     <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6">
                         <p className="text-amber-400 font-medium mb-1">Delivery Timeline</p>
                         <p className="text-slate-300 text-sm">
-                            Your cash withdrawal will be processed and delivered within <strong className="text-white">3-5 business days</strong>, depending on your location.
+                            Your cash withdrawal will be processed and delivered within <strong className="text-white">3-5 business days</strong>, depending on your location. Please <strong className="text-amber-400">contact our support team</strong> for further instructions on delivery.
                         </p>
                     </div>
 
@@ -324,7 +323,7 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                                             <h4 className="font-medium text-emerald-400 mb-1">Cash Withdrawal Information</h4>
                                             <p className="text-sm text-slate-300">
                                                 Cash withdrawals are processed and delivered within 3-5 business days, depending on your location.
-                                                You will receive a tracking number upon submission.
+                                                You will receive a tracking number upon submission. Please <strong className="text-emerald-400">contact our support team</strong> for further instructions.
                                             </p>
                                         </div>
                                     </div>
@@ -383,7 +382,7 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                                     <div>
                                         <h4 className="font-medium text-amber-400 mb-1">Delivery Timeline</h4>
                                         <p className="text-sm text-slate-300">
-                                            Your cash will be delivered within 3-5 business days, depending on your location.
+                                            Your cash will be delivered within 3-5 business days, depending on your location. Please <strong className="text-amber-400">contact our support team</strong> for further instructions.
                                         </p>
                                     </div>
                                 </div>
