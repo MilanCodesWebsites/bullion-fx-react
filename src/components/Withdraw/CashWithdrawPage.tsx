@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import { Banknote, DollarSign, ArrowRight, ArrowLeft, User, MapPin, Phone, Globe, CheckCircle, Copy } from 'lucide-react';
+import { Banknote, DollarSign, ArrowRight, ArrowLeft, User, MapPin, Phone, Globe, CheckCircle } from 'lucide-react';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 
@@ -35,7 +35,6 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
     const [step, setStep] = useState(1);
     const [withdrawData, setWithdrawData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [trackingNumber, setTrackingNumber] = useState<string>('');
 
     const { register, handleSubmit, formState: { errors }, watch } = useForm({
         resolver: yupResolver(cashWithdrawSchema)
@@ -50,21 +49,9 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
         }).format(amount);
     };
 
-    const generateTrackingNumber = () => {
-        const prefix = 'CW';
-        const timestamp = Date.now().toString(36).toUpperCase();
-        const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
-        return `${prefix}-${timestamp}-${randomPart}`;
-    };
-
     const onSubmit = (data: any) => {
         setWithdrawData(data);
         setStep(2);
-    };
-
-    const copyTrackingNumber = () => {
-        navigator.clipboard.writeText(trackingNumber);
-        toast.success('Tracking number copied to clipboard!');
     };
 
     const handleConfirmWithdraw = async () => {
@@ -90,9 +77,6 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                 })
             });
 
-            const generatedTracking = generateTrackingNumber();
-            setTrackingNumber(generatedTracking);
-
             if (response.ok) {
                 // Create transaction record
                 const transaction = {
@@ -105,7 +89,6 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                         address: withdrawData.address,
                         phoneNumber: withdrawData.phoneNumber,
                         country: withdrawData.country,
-                        trackingNumber: generatedTracking
                     }
                 };
 
@@ -118,8 +101,6 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
         } catch (error) {
             console.error('Error submitting cash withdrawal:', error);
             // Even if there's an error, we'll still show success since the request might have gone through
-            const generatedTracking = generateTrackingNumber();
-            setTrackingNumber(generatedTracking);
 
             const transaction = {
                 type: 'debit' as const,
@@ -131,7 +112,6 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                     address: withdrawData.address,
                     phoneNumber: withdrawData.phoneNumber,
                     country: withdrawData.country,
-                    trackingNumber: generatedTracking
                 }
             };
 
@@ -146,7 +126,6 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
     const resetFlow = () => {
         setStep(1);
         setWithdrawData(null);
-        setTrackingNumber('');
     };
 
     // Confirmation/Success Screen
@@ -159,19 +138,12 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                     </div>
                     <h2 className="text-2xl font-bold text-white mb-4">Cash Withdrawal Submitted!</h2>
 
-                    {/* Tracking Number */}
-                    <div className="bg-slate-700/50 border border-slate-600 rounded-xl p-4 mb-6">
-                        <p className="text-slate-400 text-sm mb-2">Your Tracking Number</p>
-                        <div className="flex items-center justify-center gap-3">
-                            <span className="text-xl font-mono font-bold text-neon-green">{trackingNumber}</span>
-                            <button
-                                onClick={copyTrackingNumber}
-                                className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
-                                title="Copy tracking number"
-                            >
-                                <Copy className="w-5 h-5 text-slate-400 hover:text-white" />
-                            </button>
-                        </div>
+                    {/* Contact Support for Tracking */}
+                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6">
+                        <p className="text-blue-400 font-medium mb-1">Get Your Tracking Number</p>
+                        <p className="text-slate-300 text-sm">
+                            Please <strong className="text-blue-400">contact our support team</strong> to receive your tracking number for this withdrawal request.
+                        </p>
                     </div>
 
                     <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6">
@@ -182,7 +154,7 @@ const CashWithdrawPage: React.FC<CashWithdrawPageProps> = ({ balance, onWithdraw
                     </div>
 
                     <p className="text-slate-300 mb-6">
-                        Please save your tracking number for reference. You will receive updates via the phone number you provided.
+                        Our support team will provide you with all the details you need for your cash withdrawal.
                     </p>
 
                     <div className="flex gap-4 justify-center flex-col sm:flex-row">
