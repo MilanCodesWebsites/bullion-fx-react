@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import Button from '../UI/Button';
 
 const walletAddresses = {
-  BTC: '1N4wen6Nk9yhmrueWSZXUePgCYbb7FtQhe',
+  BTC: '1MvsGY6kR2DcudfXckGKQJDsBm6sr9kXfu',
   ETH: '0x5c44e4f4f9251f43d647f5c8a7b799bb480bd674',
   SOL: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
   USDC: '8heKVhbgo64xW31s7dzVkGPkubHmEWtJZYMYYKWGHJYA',
